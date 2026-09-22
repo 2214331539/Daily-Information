@@ -13,7 +13,7 @@
 [![Tauri](https://img.shields.io/badge/Tauri-2-24C8DB?style=flat-square&logo=tauri&logoColor=white)](#技术栈)
 [![React](https://img.shields.io/badge/React-19-61DAFB?style=flat-square&logo=react&logoColor=black)](#技术栈)
 [![Rust](https://img.shields.io/badge/Rust-1.77%2B-000000?style=flat-square&logo=rust&logoColor=white)](#技术栈)
-[![Tests](https://img.shields.io/badge/tests-15%20passing-5FB88A?style=flat-square)](#开发)
+[![Tests](https://img.shields.io/badge/tests-14%20passed-5FB88A?style=flat-square)](#开发)
 [![Size](https://img.shields.io/badge/installer-3.8%20MB-4B5563?style=flat-square)](#快速开始)
 [![Memory](https://img.shields.io/badge/memory-~30%20MB-4B5563?style=flat-square)](#已知限制)
 
@@ -257,8 +257,8 @@ npm run typecheck    # TypeScript 类型检查
 npm run web:build    # 只构建前端资源
 
 cd src-tauri
-cargo test --lib                            # 15 个单元 / 集成测试
-cargo test --lib -- --ignored --nocapture   # 联网测试：真实抓取网页元数据
+cargo test --lib                            # 14 个离线测试
+cargo test --lib -- --ignored --nocapture   # 1 个联网测试：真实抓取网页元数据
 ```
 
 测试覆盖了产品里最容易出错的部分：多级分组的持久化与递归穿透、分组移动防环、级联删除、折叠父分组时新建子分组、点卯的日期语义，以及网页元数据解析与中文编码。
