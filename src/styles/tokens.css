@@ -1,0 +1,87 @@
+/* ============================================================================
+   点卯 · 设计令牌
+   方向：夜巡 —— 深夜值班室的秩序感。深色为默认，琥珀是唯一暖色光源，
+   信号红只用于「今日未点卯」。
+   ========================================================================= */
+
+:root {
+  /* 间距 */
+  --sp-1: 4px;
+  --sp-2: 8px;
+  --sp-3: 12px;
+  --sp-4: 16px;
+  --sp-5: 24px;
+  --sp-6: 32px;
+
+  /* 圆角 */
+  --r-sm: 6px;
+  --r-md: 10px;
+  --r-lg: 14px;
+  --r-full: 999px;
+
+  /* 动效 */
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --t-fast: 180ms;
+  --t-base: 260ms;
+  --t-slow: 480ms;
+
+  /* 字体 */
+  --font-display: "Bahnschrift", "Segoe UI Variable Display", "Segoe UI",
+    "Microsoft YaHei UI", system-ui, sans-serif;
+  --font-ui: "Segoe UI Variable Text", "Segoe UI", "Microsoft YaHei UI",
+    system-ui, sans-serif;
+  --font-mono: "Cascadia Mono", Consolas, "Courier New", monospace;
+
+  /* 布局 */
+  --titlebar-h: 56px;
+  --sidebar-w: 244px;
+}
+
+[data-theme="dark"] {
+  --bg: #0b0e13;
+  --panel: #11151c;
+  --card: #161b23;
+  --card-hover: #1a2029;
+  --line: #232a36;
+  --line-soft: #1b212b;
+  --text: #e3e8f0;
+  --text-dim: #8e9aac;
+  --text-mute: #5c6675;
+  --amber: #e9a23b;
+  --amber-soft: rgba(233, 162, 59, 0.14);
+  --amber-line: rgba(233, 162, 59, 0.42);
+  --signal: #ff5a47;
+  --signal-soft: rgba(255, 90, 71, 0.16);
+  --done: #5fb88a;
+  --hover: rgba(227, 232, 240, 0.06);
+  --shadow: 0 1px 2px rgba(0, 0, 0, 0.4), 0 10px 28px rgba(0, 0, 0, 0.3);
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.35);
+  --noise-opacity: 0.035;
+  --glow-a: rgba(233, 162, 59, 0.07);
+  --glow-b: rgba(110, 140, 255, 0.05);
+}
+
+[data-theme="light"] {
+  --bg: #f6f3ed;
+  --panel: #fffefb;
+  --card: #ffffff;
+  --card-hover: #fffdf8;
+  --line: #e5ded2;
+  --line-soft: #efeae1;
+  --text: #1b2027;
+  --text-dim: #6b7280;
+  --text-mute: #9aa1ac;
+  --amber: #c87f1e;
+  --amber-soft: rgba(200, 127, 30, 0.12);
+  --amber-line: rgba(200, 127, 30, 0.38);
+  --signal: #e23a25;
+  --signal-soft: rgba(226, 58, 37, 0.12);
+  --done: #2f8f5b;
+  --hover: rgba(27, 32, 39, 0.05);
+  --shadow: 0 1px 2px rgba(28, 20, 8, 0.06), 0 10px 26px rgba(28, 20, 8, 0.08);
+  --shadow-sm: 0 1px 2px rgba(28, 20, 8, 0.06);
+  --noise-opacity: 0.02;
+  --glow-a: rgba(200, 127, 30, 0.09);
+  --glow-b: rgba(90, 120, 220, 0.05);
+}
