@@ -1,0 +1,38 @@
+[package]
+name = "dianmao"
+version = "0.1.0"
+description = "日常新闻 - 本地每日巡检板"
+authors = ["dianmao"]
+license = "MIT"
+repository = ""
+edition = "2021"
+rust-version = "1.77.2"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[lib]
+name = "dianmao_lib"
+crate-type = ["staticlib", "cdylib", "rlib"]
+
+[build-dependencies]
+tauri-build = { version = "2.6.3", features = [] }
+
+[dependencies]
+serde_json = "1.0"
+serde = { version = "1.0", features = ["derive"] }
+log = "0.4"
+tauri = { version = "2.11.6", features = [] }
+tauri-plugin-log = "2"
+tauri-plugin-single-instance = "2"
+rusqlite = { version = "0.32", features = ["bundled"] }
+reqwest = { version = "0.12", default-features = false, features = [
+    "rustls-tls",
+    "gzip",
+    "brotli",
+    "deflate",
+] }
+scraper = "0.21"
+url = "2"
+encoding_rs = "0.8"
+opener = "0.7"
+anyhow = "1"

@@ -1,0 +1,27 @@
+# 依赖与构建产物
+node_modules/
+dist/
+src-tauri/target/
+
+# 移动端图标由 `npx tauri icon` 生成，本项目只发布 Windows，不入库
+src-tauri/icons/android/
+src-tauri/icons/ios/
+
+# 本地数据库（真实数据，绝不上传）
+*.db
+*.db-shm
+*.db-wal
+
+# 分发产物（体积大，不入库；用 npm run build 重新生成）
+release/
+
+# 本地环境
+.env
+.env.local
+*.log
+
+# 编辑器
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
