@@ -95,29 +95,44 @@
 
 ## 快速开始
 
-### 方式一：直接下载
+仓库不附带预编译二进制——安装包与便携版合计约 18 MB，放进 Git 历史会显著拖慢克隆。三条路径任选。
 
-从 [Releases](https://github.com/2214331539/Daily-Information/releases) 下载，两种形态任选：
+### A. 下载已发布的版本
+
+推送版本标签（如 `v0.1.0`）会触发 [GitHub Actions](./.github/workflows/release.yml) 在 Windows 上自动构建并发布到 [Releases](https://github.com/2214331539/Daily-Information/releases)。
 
 | 形态 | 适用场景 | 数据位置 |
 | :--- | :--- | :--- |
-| **安装版** `setup.exe`（3.8 MB） | 长期使用，要开始菜单入口与正规卸载 | `%APPDATA%\com.dianmao.app\` |
+| **安装版** `日常新闻_*_x64-setup.exe`（3.8 MB） | 长期使用，要开始菜单入口与正规卸载 | `%APPDATA%\com.dianmao.app\` |
 | **便携版** 单 exe（13.9 MB） | 放 U 盘、多机同步、不想在系统里留痕 | exe 同目录的 `data\` |
 
-> 便携版需要 `data` 文件夹与 exe 放在一起；整个文件夹拷走即完成迁移。
-> 两种形态都未做代码签名，首次运行 Windows SmartScreen 会提示「未知发布者」，点「更多信息 → 仍要运行」即可。
-
-### 方式二：从源码构建
+### B. 本地构建
 
 ```bash
 git clone git@github.com:2214331539/Daily-Information.git
 cd Daily-Information
 npm install
-npm run dev        # 启动开发模式，首次会编译 Rust 依赖（约 3-6 分钟）
-npm run build      # 打包，产出安装版与便携版
+npm run build
 ```
 
-环境要求：Rust 1.77+（MSVC 工具链）、Node.js 20+、Visual Studio 生成工具 2022、WebView2 运行时（Win11 与新版 Win10 自带）。
+产物：
+
+```
+src-tauri/target/release/
+├── dianmao.exe                                便携版单文件（即主程序）
+└── bundle/nsis/日常新闻_0.1.0_x64-setup.exe    安装包（可选安装路径）
+```
+
+### C. 只跑开发模式
+
+```bash
+npm run dev      # 首次会完整编译 Rust 依赖，约 3–6 分钟
+```
+
+> 便携版需要 `data` 文件夹与 exe 放在一起，整个文件夹拷走即完成迁移。
+> 两种形态都未做代码签名，首次运行 Windows SmartScreen 会提示「未知发布者」，点「更多信息 → 仍要运行」即可。
+
+**环境要求**：Rust 1.77+（MSVC 工具链）、Node.js 20+、Visual Studio 生成工具 2022、WebView2 运行时（Win11 与新版 Win10 自带）。
 
 ## 工作原理
 

@@ -1,0 +1,69 @@
+name: Release
+
+# 推送形如 v0.1.0 的标签时，自动在 Windows 上构建并把两种形态附加到 Release
+on:
+  push:
+    tags:
+      - "v*.*.*"
+
+permissions:
+  contents: write
+
+jobs:
+  build-windows:
+    runs-on: windows-latest
+
+    steps:
+      - name: 检出代码
+        uses: actions/checkout@v4
+
+      - name: 安装 Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: 安装 Rust 工具链
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: 缓存 Rust 构建产物
+        uses: swatinem/rust-cache@v2
+        with:
+          workspaces: src-tauri
+
+      - name: 安装前端依赖
+        run: npm ci
+
+      - name: 类型检查
+        run: npm run typecheck
+
+      - name: 运行后端测试
+        working-directory: src-tauri
+        run: cargo test --lib
+
+      - name: 构建并发布
+        uses: tauri-apps/tauri-action@v0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tagName: ${{ github.ref_name }}
+          releaseName: "日常新闻 ${{ github.ref_name }}"
+          releaseBody: |
+            把每天要看的网站收进卡片，用多级文件夹组织；今天没点过的亮红点，点过就熄灭。
+
+            ## 下载哪个
+
+            | 文件 | 说明 |
+            | --- | --- |
+            | `日常新闻_*_x64-setup.exe` | **安装版**。可选安装路径，不需要管理员权限，出现在开始菜单，可从「程序和功能」正常卸载。数据保存在 `%APPDATA%\com.dianmao.app\` |
+            | `dianmao.exe` | **便携版**单文件，即主程序。双击即运行，无需安装。数据保存在 exe 同目录的 `data\` 文件夹里，整个文件夹拷走即可迁移 |
+
+            > 便携版首次运行前，请在 exe 旁边建一个空的 `data` 文件夹；没有它程序会退回到 `%APPDATA%` 保存数据。
+            >
+            > 两种形态都未做代码签名，首次运行 Windows SmartScreen 会提示「未知发布者」，点「更多信息 → 仍要运行」即可。
+
+            ## 系统要求
+
+            Windows 10 1809 及以上 / Windows 11，需要 WebView2 运行时（Win11 与新版 Win10 已自带）。
+          releaseDraft: false
+          prerelease: false
