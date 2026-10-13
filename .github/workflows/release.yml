@@ -41,13 +41,6 @@ jobs:
         working-directory: src-tauri
         run: cargo test --lib
 
-      - name: 准备便携版
-        shell: pwsh
-        run: |
-          $portable = "日常新闻-${{ github.ref_name }}-便携版.exe"
-          Copy-Item "src-tauri/target/release/dianmao.exe" $portable
-          "PORTABLE_EXE=$portable" | Out-File -FilePath $env:GITHUB_ENV -Append
-
       - name: 构建并发布
         uses: tauri-apps/tauri-action@v0
         env:
@@ -72,4 +65,18 @@ jobs:
             Windows 10 1809 及以上 / Windows 11，需要 WebView2 运行时（Win11 与新版 Win10 已自带）。
           releaseDraft: false
           prerelease: false
-          assets: ${{ env.PORTABLE_EXE }}
+
+      - name: 准备便携版
+        shell: pwsh
+        run: |
+          $portable = "日常新闻-${{ github.ref_name }}-便携版.exe"
+          Copy-Item "src-tauri/target/release/dianmao.exe" $portable
+          "PORTABLE_EXE=$portable" | Out-File -FilePath $env:GITHUB_ENV -Append
+
+      - name: 附加便携版到 Release
+        uses: softprops/action-gh-release@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref_name }}
+          files: ${{ env.PORTABLE_EXE }}
