@@ -41,6 +41,13 @@ jobs:
         working-directory: src-tauri
         run: cargo test --lib
 
+      - name: 准备便携版
+        shell: pwsh
+        run: |
+          $portable = "日常新闻-${{ github.ref_name }}-便携版.exe"
+          Copy-Item "src-tauri/target/release/dianmao.exe" $portable
+          "PORTABLE_EXE=$portable" | Out-File -FilePath $env:GITHUB_ENV -Append
+
       - name: 构建并发布
         uses: tauri-apps/tauri-action@v0
         env:
@@ -56,10 +63,8 @@ jobs:
             | 文件 | 说明 |
             | --- | --- |
             | `日常新闻_*_x64-setup.exe` | **安装版**。可选安装路径，不需要管理员权限，出现在开始菜单，可从「程序和功能」正常卸载。数据保存在 `%APPDATA%\com.dianmao.app\` |
-            | `dianmao.exe` | **便携版**单文件，即主程序。双击即运行，无需安装。数据保存在 exe 同目录的 `data\` 文件夹里，整个文件夹拷走即可迁移 |
+            | `日常新闻-${{ github.ref_name }}-便携版.exe` | **便携版**单文件主程序。双击即运行，无需安装；首次运行前请在 exe 旁新建空的 `data` 文件夹，数据保存在此目录，整个文件夹拷走即可迁移 |
 
-            > 便携版首次运行前，请在 exe 旁边建一个空的 `data` 文件夹；没有它程序会退回到 `%APPDATA%` 保存数据。
-            >
             > 两种形态都未做代码签名，首次运行 Windows SmartScreen 会提示「未知发布者」，点「更多信息 → 仍要运行」即可。
 
             ## 系统要求
@@ -67,3 +72,4 @@ jobs:
             Windows 10 1809 及以上 / Windows 11，需要 WebView2 运行时（Win11 与新版 Win10 已自带）。
           releaseDraft: false
           prerelease: false
+          assets: ${{ env.PORTABLE_EXE }}
