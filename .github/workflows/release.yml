@@ -55,8 +55,8 @@ jobs:
 
             | 文件 | 说明 |
             | --- | --- |
-            | `日常新闻_*_x64-setup.exe` | **安装版**。可选安装路径，不需要管理员权限，出现在开始菜单，可从「程序和功能」正常卸载。数据保存在 `%APPDATA%\com.dianmao.app\` |
-            | `日常新闻-${{ github.ref_name }}-便携版.exe` | **便携版**单文件主程序。双击即运行，无需安装；首次运行前请在 exe 旁新建空的 `data` 文件夹，数据保存在此目录，整个文件夹拷走即可迁移 |
+            | `Daily-Information_*_x64-setup.exe` | **安装版**。可选安装路径，不需要管理员权限，出现在开始菜单，可从「程序和功能」正常卸载。数据保存在 `%APPDATA%\com.dianmao.app\` |
+            | `Daily-Information-${{ github.ref_name }}-portable.exe` | **便携版**单文件主程序。双击即运行，无需安装；首次运行前请在 exe 旁新建空的 `data` 文件夹，数据保存在此目录，整个文件夹拷走即可迁移 |
 
             > 两种形态都未做代码签名，首次运行 Windows SmartScreen 会提示「未知发布者」，点「更多信息 → 仍要运行」即可。
 
@@ -65,11 +65,12 @@ jobs:
             Windows 10 1809 及以上 / Windows 11，需要 WebView2 运行时（Win11 与新版 Win10 已自带）。
           releaseDraft: false
           prerelease: false
+          releaseAssetNamePattern: Daily-Information_[version]_[arch][setup][ext]
 
       - name: 准备便携版
         shell: pwsh
         run: |
-          $portable = "日常新闻-${{ github.ref_name }}-便携版.exe"
+          $portable = "Daily-Information-${{ github.ref_name }}-portable.exe"
           Copy-Item "src-tauri/target/release/dianmao.exe" $portable
           "PORTABLE_EXE=$portable" | Out-File -FilePath $env:GITHUB_ENV -Append
 
@@ -79,4 +80,44 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           tag_name: ${{ github.ref_name }}
+          name: "日常新闻 ${{ github.ref_name }}"
+          body: |
+            把每天要看的网站收进卡片，用多级文件夹组织；今天没点过的亮红点，点过就熄灭。
+
+            ## 下载哪个
+
+            | 文件 | 说明 |
+            | --- | --- |
+            | `Daily-Information_*_x64-setup.exe` | **安装版**。可选安装路径，不需要管理员权限，出现在开始菜单，可从「程序和功能」正常卸载。数据保存在 `%APPDATA%\com.dianmao.app\` |
+            | `Daily-Information-${{ github.ref_name }}-portable.exe` | **便携版**单文件主程序。双击即运行，无需安装；首次运行前请在 exe 旁新建空的 `data` 文件夹，数据保存在此目录，整个文件夹拷走即可迁移 |
+
+            > 两种形态都未做代码签名，首次运行 Windows SmartScreen 会提示「未知发布者」，点「更多信息 → 仍要运行」即可。
+
+            ## 系统要求
+
+            Windows 10 1809 及以上 / Windows 11，需要 WebView2 运行时（Win11 与新版 Win10 已自带）。
           files: ${{ env.PORTABLE_EXE }}
+
+      - name: 清理旧的乱码资产名
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const { data: release } = await github.rest.repos.getReleaseByTag({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              tag: context.ref.replace('refs/tags/', ''),
+            });
+            const { data: assets } = await github.rest.repos.listReleaseAssets({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              release_id: release.id,
+            });
+            for (const asset of assets) {
+              if (['-v0.1.0-.exe', '_0.1.0_x64-setup.exe'].includes(asset.name)) {
+                await github.rest.repos.deleteReleaseAsset({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  asset_id: asset.id,
+                });
+              }
+            }
