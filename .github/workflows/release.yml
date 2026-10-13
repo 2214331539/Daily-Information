@@ -65,7 +65,7 @@ jobs:
             Windows 10 1809 及以上 / Windows 11，需要 WebView2 运行时（Win11 与新版 Win10 已自带）。
           releaseDraft: false
           prerelease: false
-          releaseAssetNamePattern: Daily-Information_[version]_[arch][setup][ext]
+          assetNamePattern: Daily-Information_[version]_[arch][setup][ext]
 
       - name: 准备便携版
         shell: pwsh
